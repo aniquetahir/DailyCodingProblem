@@ -1,38 +1,60 @@
-import heapq
 
-def merge(lists):
-    merged_list = []
+def naive(numbers_list, k):
+    '''
+    The naive solution loops through the array two times
+    :param numbers_list: the list of numbers
+    :param k: the sum of numbers
+    :return: a boolean representing whether the pair exists
+    '''
+    for first_num in numbers_list:
+        for second_num in numbers_list:
+            if first_num+second_num == k:
+                return True
 
-    heap = [(lst[0], i, 0) for i, lst in enumerate(lists) if lst]
-    heapq.heapify(heap)
+    return False
 
-    while heap:
-        val, list_ind, element_ind = heapq.heappop(heap)
 
-        merged_list.append(val)
+sum_map = {}
+def sum_exists(numbers_list, k):
+    '''
+    Returns whether a sum of numbers exists in the list
+    :param numbers_list:
+    :param k:
+    :param n: number of items in the sum
+    :return:
+    '''
+    global sum_map
 
-        if element_ind + 1 < len(lists[list_ind]):
-            next_tuple = (lists[list_ind][element_ind + 1],
-                          list_ind,
-                          element_ind + 1)
-            heapq.heappush(heap, next_tuple)
-    return merged_list
+    while True:
+        if len(numbers_list) == 0:
+            return False
+        curr_number = numbers_list.pop()
+        if k-curr_number in sum_map:
+            return True
+        sum_map[curr_number] = True
 
-def run_tests():
-    cases = [
-        [[10, 15, 30], [12, 15, 20], [17, 20, 32]],
-        [],
-        [[], [], []],
-        [[], [1], [1,2]],
-        [[1]],
-        [[1], [1, 3, 5], [1, 10, 20, 30, 40]]
+def dynamic(numbers_list, k):
+    return sum_exists(numbers_list, k)
+
+def dtest_solution():
+    test_cases = [
+        ([10, 15, 3, 7], 17),
+        ([], 3),
+        ([5, 4, -7, -10], -6),
+        ([5,4,3,2], 100)
     ]
 
-    for test_case in cases:
-        print("Input: ")
-        print(test_case)
-        print("Output: ")
-        print(merge(test_case))
+    for case in test_cases:
+        print('Case: ')
+        print(case[0])
+        print("sum: %i" % case[1])
+        print(dynamic(case[0], case[1]))
+        print("===========")
+
+
+
+
+
 
 if __name__ == "__main__":
-    run_tests()
+    dtest_solution()
